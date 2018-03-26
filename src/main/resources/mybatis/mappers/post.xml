@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+
+
+
+<sql id="findPost">
+<![CDATA[
+	select no, title, cotent as content, category_no as categoryNo
+	from post
+	]]>
+</sql>
+
+<select id="getList" parameterType="Long" resultType="postvo">
+	<include refid="findPost" />
+<![CDATA[
+	where category_no = #{_parameter}
+	]]>
+</select>
+
+
+<select id="getPost" parameterType="long" resultType="postvo">
+	<include refid="findPost"/>
+<![CDATA[
+	where no = #{parameter}
+	]]>
+</select>
+
+<insert id="insertPost" parameterType="postvo">
+<![CDATA[
+	insert into post
+	values(null, #{title},#{content},#{categoryNo})	
+
+	]]>
+</insert>
+
+<delete id="deletePost" parameterType="long">
+<![CDATA[
+	delete from post
+	where no = #{_parameter}	
+]]>
+</delete>
+
+
+</mapper>
