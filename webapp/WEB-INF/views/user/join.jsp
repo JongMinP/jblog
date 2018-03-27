@@ -1,7 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <!doctype html>
 <html>
 <head>
@@ -9,27 +10,69 @@
 <c:set var="ctx" value="${pageContext.servletContext.contextPath}" />
 <title>JBlog</title>
 <Link rel="stylesheet" href="${ctx}/assets/css/jblog.css">
+<script src="${ctx}/assets/js/jquery/jquery-1.9.0.js"
+	type="text/javascript"></script>
+
+<script type="text/javascript">
+	$(function() {
+		$("#btn-checkid").click(function() {
+			var id = $("#blog-id").val();
+			if (id == "") {
+				return;
+			}
+
+			 $.ajax({
+				url : "${ctx}/api/user/checkid?id=" + id,
+				type : "get",
+				data : "",
+				dataType : "json",
+				success : function(response) {
+					 console.log("sdf");
+
+					if (response.result != "success") {
+						return;
+					}
+
+					if (response.data == "exist") {
+						alert("이미 사용중인 아이디");
+						$("#blog-id").val("").focus();
+						return;
+					}
+
+					$("#img-checkid").show();
+					$("#btn-checkid").hide(); 
+
+				},
+				error : function(xhr, status, e) {
+					console.log("gg");
+					// 개발단계에서만 
+				}
+			}); 
+			
+
+		});
+
+	});
+</script>
+
+
 </head>
 <body>
 	<div class="center-content">
 		<h1 class="logo">JBlog</h1>
 		<ul class="menu">
-			<li><a href="${ctx}/user/login">로그인</a></li>
-			<li><a href="${ctx}/user/join">회원가입</a></li>
-			<li><a href="${ctx}/user/logout">로그아웃</a></li>
-			<li><a href="${ctx}/board/main">내블로그</a></li>
+			<c:import url="/WEB-INF/views/includes/header.jsp" />
 		</ul>
-		<form class="join-form" id="join-form" method="post" action="${ctx}/user/joinsuccess">
-			<label class="block-label" for="name">이름</label>
-			<input id="name"name="name" type="text" value="">
-			
-			<label class="block-label" for="blog-id">아이디</label>
-			<input id="blog-id" name="id" type="text"> 
-			<input id="btn-checkemail" type="button" value="id 중복체크">
-			<img id="img-checkemail" style="display: none;" src="${ctx}/assets/images/check.png">
-
-			<label class="block-label" for="password">패스워드</label>
-			<input id="password" name="password" type="password" />
+		<form class="join-form" id="join-form" method="post"
+			action="${ctx}/user/joinsuccess">
+			<label class="block-label" for="name">이름</label> <input id="name"
+				name="name" type="text" value=""> <label class="block-label"
+				for="blog-id">아이디</label> <input id="blog-id" name="id" type="text">
+			<input id="btn-checkid" type="button" value="id 중복체크"> <img
+				id="img-checkid" style="display: none;"
+				src="${ctx}/assets/images/check.png"> <label
+				class="block-label" for="password">패스워드</label> <input id="password"
+				name="password" type="password" />
 
 			<fieldset>
 				<legend>약관동의</legend>

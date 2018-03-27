@@ -14,13 +14,13 @@ public class BlogDao {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public BlogVo searchBlog(int blogNo) {
+	public BlogVo searchBlog(Long no) {
 
-		return sqlSession.selectOne("blog.blogByNo", blogNo);
+		return sqlSession.selectOne("blog.blogByNo", no);
 
 	}
 
-	public boolean insertBlog(int userNo) {
+	public boolean insertBlog(Long userNo) {
 		int result = sqlSession.insert("blog.insertByNo", userNo);
 
 		return result == 1;
@@ -37,6 +37,11 @@ public class BlogDao {
 
 		return sqlSession.selectList("blog.getList");
 
+	}
+	
+	public BlogVo findBlogByUserId(String id) {
+		
+		return sqlSession.selectOne("blog.blogByUserId",id);
 	}
 
 }

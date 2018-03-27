@@ -26,20 +26,46 @@
 				</property>
 
 			</bean>
-			<!-- json 형태로 변환 빈 -->
-			<bean
-				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-				<property name="supportedMediaTypes">
-					<list>
-						<value>application/json; charset=UTF-8</value>
-					</list>
-				</property>
-			</bean>
-
+			
 
 
 		</mvc:message-converters>
+
+		<!-- argument resolver -->
+		<mvc:argument-resolvers>
+			<bean class="com.cafe24.security.AuthUserHandlerMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+
+
+
 	</mvc:annotation-driven>
+
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/auth" />
+			<bean class="com.cafe24.security.AuthLoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/logout" />
+			<bean class="com.cafe24.security.AuthLogoutInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/user/auth" />
+			<mvc:exclude-mapping path="/user/logout" />
+			<mvc:exclude-mapping path="/assets/**" />
+			<bean class="com.cafe24.security.AuthInterceptor" />
+		</mvc:interceptor>
+
+	</mvc:interceptors>
 
 
 
@@ -76,6 +102,17 @@
 		<property name="defaultEncoding" value="utf-8" />
 
 	</bean>
+	
+	<!-- json 형태로 변환 빈 -->
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+	
 
 
 	<!-- 빈 설정을 annotation 기반으로 하겠다. -->

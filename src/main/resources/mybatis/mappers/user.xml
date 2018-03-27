@@ -4,10 +4,13 @@
 <mapper namespace="user">
 
 
-	<insert id="insertUserBlog" parameterType="uservo">
+	<insert id="insertUserBlog" parameterType="uservo" useGeneratedKeys="true" keyColumn="no" keyProperty="no">
 		insert into user
 		values(null,#{id},#{name} ,#{password})
-
+		
+		<selectKey keyProperty="no"  resultType="long"  order="AFTER">
+			select LAST_INSERT_ID();
+		</selectKey>
 	</insert>
 
 	<sql id="user">
@@ -28,6 +31,10 @@
 		<include refid="user" />
 	</select>
 
+	<select id="getByID" parameterType="string" resultType="uservo">
+		<include refid="user" />
+		where id = #{_parameter}
+	</select>
 
 
 

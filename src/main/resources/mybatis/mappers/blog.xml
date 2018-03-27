@@ -16,6 +16,15 @@
 		from blog
 	]]>
 	</sql>
+	
+	<select id="blogByUserId" parameterType="string" resultType="blogvo">
+	<![CDATA[
+		select b.no, b.title, b.image , b.user_no as userNo
+		from blog b, user u
+		where b.user_no = u.no and u.id = #{_parameter}
+		]]>	
+	</select>
+	
 
 	<insert id="insertByNo">
 		<![CDATA[
@@ -24,11 +33,11 @@
 		]]>
 	</insert>
 
-	<update id="updateBlog">
+	<update id="updateBlog" parameterType="blogvo">
 		<![CDATA[
 		update blog
 		set title = #{title} , image = #{image}
-		where no = #{no}
+		where user_no = #{userNo}
 		]]>
 	</update>
 

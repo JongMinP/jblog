@@ -12,12 +12,12 @@ public class JSONResult {
 	}
 
 	public static JSONResult success(Object data) {
-
+		System.out.println("data == > " + data);
 		return new JSONResult("success", null, data);
 	}
 
 	public static JSONResult fail(String message) {
-
+		System.out.println("message == > " + message);
 		return new JSONResult("fail", message, null);
 	}
 

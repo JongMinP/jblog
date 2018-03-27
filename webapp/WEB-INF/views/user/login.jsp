@@ -17,18 +17,16 @@
 	<div class="center-content">
 		<h1 class="logo">JBlog</h1>
 		<ul class="menu">
-			<li><a href="${ctx}/user/login">로그인</a></li>
-			<li><a href="${ctx}/user/join">회원가입</a></li>
-			<li><a href="${ctx}/user/logout">로그아웃</a></li>
-			<li><a href="${ctx}/board/main">내블로그</a></li>
+			<c:import url="/WEB-INF/views/includes/header.jsp" />
 		</ul>
-		<form class="login-form">
+		<form class="login-form" method="post" action="${ctx}/user/auth">
 			<label>아이디</label> <input type="text" name="id"> <label>패스워드</label>
+
+			<input type="password" name="password">
 			<c:if test="${'fail' eq  result }">
 				<p>로그인이 실패 했습니다.</p>
 			</c:if>
-			<input type="text" name="password"> <input type="submit"
-				value="로그인">
+			<input type="submit" value="로그인">
 		</form>
 	</div>
 </body>

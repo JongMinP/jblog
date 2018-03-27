@@ -16,10 +16,10 @@ public class UserDao {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public boolean insertUserBlog(UserVo vo) {
+	public int insertUserBlog(UserVo vo) {
 		int result = sqlSession.insert("user.insertUserBlog", vo);
 
-		return result == 1;
+		return result;
 	}
 
 	public UserVo getUser(String id, String password) {
@@ -33,6 +33,11 @@ public class UserDao {
 	public List<UserVo> getUser() {
 
 		return sqlSession.selectList("user.getUsers");
+	}
+	
+	public UserVo getByID(String id) {
+		
+		return sqlSession.selectOne("user.getByID",id);
 	}
 
 }

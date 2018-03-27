@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,26 +24,14 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 
-		return "/user/login";
+		return "user/login";
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(@ModelAttribute UserVo vo) {
-		
-		UserVo authUser = service.getUser(vo);
-		
-		if(authUser == null) {
-			
-		}
-		
-		return "/user/login";
-		
-	}
 
 	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public String join() {
 
-		return "/user/join";
+		return "user/join";
 	}
 
 	@RequestMapping(value = "/joinsuccess", method = RequestMethod.POST)
@@ -52,7 +41,7 @@ public class UserController {
 
 		service.join(vo);
 
-		return "/user/joinsuccess";
+		return "user/joinsuccess";
 	}
 
 }
