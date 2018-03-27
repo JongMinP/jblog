@@ -23,24 +23,24 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
-
 		return "user/login";
 	}
 
-
 	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public String join() {
-
 		return "user/join";
 	}
 
-	@RequestMapping(value = "/joinsuccess", method = RequestMethod.POST)
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public String join(@ModelAttribute UserVo vo) {
-
-		LOG.warn(vo);
 
 		service.join(vo);
 
+		return "redirect:user/joinsuccess";
+	}
+
+	@RequestMapping(value = "/joinsuccess", method = RequestMethod.GET)
+	public String joinSuccess() {
 		return "user/joinsuccess";
 	}
 
