@@ -13,15 +13,16 @@
 </sql>
 
 
-<select id="getList" resultType="categoryvo">
+<select id="getList" parameterType="long" resultType="categoryvo">
 	<include refid="findCategory"/>
+	where blog_no = #{_parameter}
 </select>
 
 
 <insert id="insertCategory" parameterType="categoryvo">
 	<![CDATA[
 		insert into category
-		values(null,#{name},#{postCount},#{content},#{blogNo})
+		values(null,#{name},0,#{content},#{blogNo})
 	]]>
 
 </insert>
@@ -32,6 +33,20 @@
 		where no = #{_parameter}
 	]]>
 </select>
+
+<delete id="deleteCategory" parameterType="long">
+	delete from category
+	where no = #{_parameter}
+
+</delete>
+
+<update id="updateCategory" parameterType="long">
+	<![CDATA[
+	update category
+	set p_count = p_count +1
+	where no = #{_parameter}
+	]]> 
+</update>
 
 
 

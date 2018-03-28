@@ -15,6 +15,7 @@
 
 <script type="text/javascript">
 	$(function() {
+
 		$("#btn-checkid").click(function() {
 			var id = $("#blog-id").val();
 			if (id == "") {
@@ -27,7 +28,6 @@
 				data : "",
 				dataType : "json",
 				success : function(response) {
-					console.log("sdf");
 
 					if (response.result != "success") {
 						return;
@@ -54,109 +54,7 @@
 	});
 </script>
 
-<script>
-$(function(){
-	$( "#join-form" ).submit( function(){
-		//1. 이름 체크
-		if( $( "#name" ).val() == "" ) {
-			messageBox( "입력폼", "이름은 필수 입력 항목입니다.", function(){
-				$( "#name" ).focus();
-			});				
-			return false;
-		}
-		
-		//2-1. 아이디가 비어있는 지 체크
-		if( $( "#id" ).val() == "" ) {
-			messageBox( "입력폼", "아이디는 필수 입력 항목입니다.", function(){
-				$( "#id" ).focus();
-			});				
-			return false;
-		}
-		
-		//2-2. 아이디 중복 체크 유무
-		if( $( "#img-checkid" ).is( ":visible" ) == false ){
-			messageBox( "입력폼", "아이디 중복 체크를 해야 합니다.");			
-			return false;
-		}
-		
-		//3. 비밀번호 체크
-		if( $("#password").val() == "" ) {
-			messageBox( "입력폼", "비밀번호는 필수 입력 항목입니다.", function(){
-				$( "#password" ).focus();
-			});			
-			return false;
-		}
-		
-		//4. 약관동의
-		if( $( "#agree-prov" ).is( ":checked" ) == false ) {
-			messageBox( "입력폼", "약관 동의를 해야 합니다.");			
-			return false;
-		}
-		
-		return true;
-	});
-	
-	$( "#id" ).change( function(){
-		$("#img-checkid").hide();
-		$("#btn-checkid").show();			
-	});
-	
-	
-	
-	$("#btn-checkid").click( function(){
-		var id = $( "#id" ).val();
-		
-		if( id == "" ) {
-			return;
-		}
-		
-		$.ajax({
-			url:"${pageContext.request.contextPath }/api/user/checkid?id=" + id,
-			type: "get",
-			dataType: "json",
-			data: "",
-			success: function( response ) {
-				console.log( response );
-				
-				// 통신 에러(서버 에러)
-				if( response.result == "fail" ) {
-					console.log( response.message );
-					return;
-				}
 
-				// 사용중인 아이디인 경우,
-				if( response.data == "exist" ) {
-					messageBox( "입력폼", "이미 존재하는 이메일입니다. 다른 이메일을 사용해 주세요.", function(){
-						$("#id").val("").focus();
-					});						
-					return;
-				}
-				
-				// 사용중이 아닌 아이디인 경우,
-				$("#img-checkid").show();
-				$("#btn-checkid").hide();
-			},
-			error: function( jqXHR, status, e ) {
-				console.error( status + ":" + e );
-			}
-		});
-	});
-});
-
-var messageBox = function( title, message, callback ){
-	$( "#dialog-message" ).attr( "title", title );
-	$( "#dialog-message p" ).text( message );
-	$( "#dialog-message" ).dialog({
-		modal: true,
-		buttons: {
-			Ok: function() {
-				$( this ).dialog( "close" );
-			}
-		},
-		close: callback || function(){}
-	});
-}
-</script>
 
 
 </head>

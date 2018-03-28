@@ -37,11 +37,19 @@ public class BlogController {
 	private PostService postService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public String goBlog(@PathVariable("id") String id, Model model) {
+	public String goBlog(@PathVariable("id") String id, Model model,
+			@RequestParam(value = "pno", required = true, defaultValue = "0") Long pno) {
 
 		BlogVo vo = blogService.blogById(id);
+		List<CategoryVo> list = categoryService.getList(vo.getNo());
 
+		CategoryVo cvo = (pno == 0) ? list.get(0) : categoryService.getCategory(pno);
+
+		List<PostVo> posts = postService.getList(cvo.getNo());
 		model.addAttribute("blog", vo);
+		model.addAttribute("categorys", list);
+		model.addAttribute("category", cvo);
+		model.addAttribute("posts", posts);
 
 		return "blog/blog-main";
 	}
@@ -58,21 +66,25 @@ public class BlogController {
 
 	@RequestMapping(value = "/{id}/admin/basic", method = RequestMethod.POST)
 	public String blogBasic(Model model, @RequestParam("title") String title,
-			@RequestParam("logo-file") MultipartFile multipartFile, @RequestParam("no") Long no) {
+			@RequestParam("logo-file") MultipartFile multipartFile, 
+			@RequestParam("no") Long no,
+			@PathVariable("id") String id) {
 
-		String image = fileUploadService.restore(multipartFile);
+		String image = (multipartFile.isEmpty() == true) ? (blogService.blogById(id)).getImage()
+				: fileUploadService.restore(multipartFile);
 
 		BlogVo vo = new BlogVo();
 
 		vo.setUserNo(no);
 		vo.setTitle(title);
+
 		vo.setImage(image);
 
 		blogService.blogUpdate(vo);
 
 		model.addAttribute("blog", vo);
 
-		return "blog/blog-main";
+		return "redirect:/blog/" + id;
 	}
 
 	@RequestMapping(value = "/{id}/admin/category", method = RequestMethod.GET)
@@ -80,6 +92,9 @@ public class BlogController {
 
 		BlogVo vo = blogService.blogById(id);
 
+		List<CategoryVo> list = categoryService.getList(vo.getNo());
+
+		model.addAttribute("categorys", list);
 		model.addAttribute("blog", vo);
 
 		return "blog/blog-admin-category";
@@ -88,9 +103,9 @@ public class BlogController {
 	@RequestMapping(value = "/{id}/admin/write", method = RequestMethod.GET)
 	public String blogWrite(Model model, @PathVariable("id") String id) {
 
-		List<CategoryVo> list = categoryService.getList();
-
 		BlogVo vo = blogService.blogById(id);
+
+		List<CategoryVo> list = categoryService.getList(vo.getNo());
 
 		model.addAttribute("blog", vo);
 		model.addAttribute("categorys", list);
@@ -99,13 +114,13 @@ public class BlogController {
 	}
 
 	@RequestMapping(value = "/{id}/admin/write", method = RequestMethod.POST)
-	public String blogWrite(@ModelAttribute PostVo vo,
-			@PathVariable("id") String id) {
+	public String blogWrite(@ModelAttribute PostVo vo, @PathVariable("id") String id) {
 
 		System.out.println(vo);
+
 		postService.postUpdate(vo);
 
-		return "redirect:/blog/" +id;
+		return "redirect:/blog/" + id;
 	}
 
 }

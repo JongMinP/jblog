@@ -11,14 +11,10 @@
 <div id="header">
 	<h1><a href="${ctx}/blog/${authUser.id}">${blog.title}</a></h1>
 	<ul>
-		<c:choose>
-			<c:when test="${authUser == null }">
+			<c:if test="${authUser == null }">
 				<li><a href="${ctx}/user/login">로그인</a></li>
-			</c:when>
-			<c:otherwise>
-				<li><a href="">로그인완료</a></li>
-			</c:otherwise>
-		</c:choose>
+			</c:if>
+
 		<li><a href="${ctx}/user/logout">로그아웃</a></li>
 		<li><a href="${ctx}/blog/${authUser.id}/admin/basic">블로그 관리</a></li>
 	</ul>

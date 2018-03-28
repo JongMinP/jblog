@@ -14,9 +14,9 @@ public class CategoryDao {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public List<CategoryVo> getList() {
+	public List<CategoryVo> getList(Long bno) {
 
-		return sqlSession.selectList("category.getList");
+		return sqlSession.selectList("category.getList", bno);
 	}
 
 	public boolean insertCategory(CategoryVo vo) {
@@ -30,6 +30,18 @@ public class CategoryDao {
 
 		return sqlSession.selectOne("category.getCategory", no);
 
+	}
+
+	public boolean deleteCategory(Long no) {
+		int result = sqlSession.delete("category.deleteCategory", no);
+
+		return result == 1;
+	}
+
+	public boolean updateCategory(Long no) {
+		int result = sqlSession.update("category.updateCategory", no);
+
+		return result == 1;
 	}
 
 }

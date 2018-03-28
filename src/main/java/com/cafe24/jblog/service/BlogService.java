@@ -13,14 +13,16 @@ public class BlogService {
 	private BlogDao dao;
 
 	public BlogVo blogById(String id) {
-		BlogVo vo = dao.findBlogByUserId(id);
-
-		return vo;
+		return dao.findBlogByUserId(id);
 	}
-	
+
 	public boolean blogUpdate(BlogVo vo) {
-		
+
 		return dao.updateBlog(vo);
+	}
+
+	public BlogVo blogByNo(Long no) {
+		return dao.searchBlog(no);
 	}
 
 }
