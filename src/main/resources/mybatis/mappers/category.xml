@@ -7,7 +7,7 @@
 
 <sql id="findCategory">
 <![CDATA[
-		select no, name, p_count as postCount , content , blog_no as blogNo
+		select no, name, p_count as postCount , content , date_format(regdate,'%Y-%m-%d') regdate, blog_no as blogNo
 		from category
 	]]>
 </sql>
@@ -16,13 +16,14 @@
 <select id="getList" parameterType="long" resultType="categoryvo">
 	<include refid="findCategory"/>
 	where blog_no = #{_parameter}
+	order by no asc
 </select>
 
 
 <insert id="insertCategory" parameterType="categoryvo">
 	<![CDATA[
 		insert into category
-		values(null,#{name},0,#{content},#{blogNo})
+		values(null,#{name},0,#{content},now(),#{blogNo})
 	]]>
 
 </insert>

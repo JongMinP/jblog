@@ -20,15 +20,15 @@
 		<div id="wrapper">
 			<div id="content">
 				<div class="blog-content">
-					<h4>${category.name }</h4>
-					<p>${fn: replace(category.content, newLine,"<br>") }
+					<h4>${post.title }</h4>
+					<p>${fn: replace(post.content, newLine,"<br>") }
 					
 					<p>
 				</div>
 				<ul class="blog-list">
 
 					<c:forEach items="${posts }" var="post">
-						<li><a href="">${post.title }</a><span>2015/05/02</span></li>
+						<li><a href="${ctx}/${authUser.id}/${category.no}/${post.no}">${post.title }</a><span>${post.regDate }</span></li>
 					</c:forEach>
 				</ul>
 				
@@ -46,7 +46,7 @@
 			<h2>카테고리</h2>
 			<ul>
 				<c:forEach items="${categorys }" var="category">
-					<li><a href="${ctx}/blog/${authUser.id}?pno=${category.no}">${category.name }</a></li>
+					<li><a href="${ctx}/${authUser.id}/${category.no}">${category.name }</a></li>
 				</c:forEach>
 			</ul>
 		</div>

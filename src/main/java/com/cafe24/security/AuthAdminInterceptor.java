@@ -13,7 +13,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.cafe24.jblog.vo.UserVo;
 
-public class AuthInterceptor extends HandlerInterceptorAdapter {
+public class AuthAdminInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -64,7 +64,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 		return true;
-
+		
 		// 6. 접근 허가
 
 	}

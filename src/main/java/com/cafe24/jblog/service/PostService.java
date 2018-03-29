@@ -35,5 +35,12 @@ public class PostService {
 		return posts;
 
 	}
+	
+	public PostVo getPost(Long postNo) {
+		
+		return dao.getPost(postNo);
+	}
+	
+	
 
 }

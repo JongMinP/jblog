@@ -7,7 +7,7 @@
 
 <sql id="findPost">
 <![CDATA[
-	select no, title, cotent as content, category_no as categoryNo
+	select no, title, cotent as content, date_format(regdate,'%Y-%m-%d') regdate , category_no as categoryNo
 	from post
 	]]>
 </sql>
@@ -30,7 +30,7 @@
 <insert id="insertPost" parameterType="postvo">
 <![CDATA[
 	insert into post
-	values(null, #{title},#{content},#{categoryNo})	
+	values(null, #{title},#{content},now(),#{categoryNo})	
 
 	]]>
 </insert>

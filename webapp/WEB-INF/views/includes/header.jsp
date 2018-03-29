@@ -8,12 +8,18 @@
 <Link rel="stylesheet" href="${ctx}/assets/css/jblog.css">
 <ul class="menu">
 
-	<c:if test="${authUser eq null }">
-		<li><a href="${ctx}/user/login">로그인</a></li>
-	</c:if>
+	<c:choose>
+		<c:when test="${authUser eq null }">
+			<li><a href="${ctx}/user/login">로그인</a></li>
+		</c:when>
+		<c:otherwise>
+			<li>${authUser.id }님 반갑습니다.</li>
+		</c:otherwise>
+	</c:choose>
+	
 	<li><a href="${ctx}/user/join">회원가입</a></li>
 	<li><a href="${ctx}/user/logout">로그아웃</a></li>
 	<c:if test="${authUser != null }">
-		<li><a href="${ctx}/blog/${authUser.id}">내블로그</a></li>
+		<li><a href="${ctx}/${authUser.id}">내블로그</a></li>
 	</c:if>
 </ul>

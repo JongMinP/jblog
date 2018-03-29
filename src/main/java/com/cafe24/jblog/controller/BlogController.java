@@ -1,6 +1,7 @@
 package com.cafe24.jblog.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,9 +20,13 @@ import com.cafe24.jblog.service.PostService;
 import com.cafe24.jblog.vo.BlogVo;
 import com.cafe24.jblog.vo.CategoryVo;
 import com.cafe24.jblog.vo.PostVo;
+import com.cafe24.jblog.vo.UserVo;
+import com.cafe24.security.Auth;
+import com.cafe24.security.Auth.Role;
+import com.cafe24.security.AuthUser;
 
 @Controller
-@RequestMapping("/blog")
+@RequestMapping("/{id:(?!assets|uploads|admin).*}")
 public class BlogController {
 
 	@Autowired
@@ -36,26 +41,45 @@ public class BlogController {
 	@Autowired
 	private PostService postService;
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public String goBlog(@PathVariable("id") String id, Model model,
-			@RequestParam(value = "pno", required = true, defaultValue = "0") Long pno) {
+	@RequestMapping({ "", "/{path1}", "/{path1}/{path2}" })
+	public String goBlog(@PathVariable("id") String id, Model model, @PathVariable("path1") Optional<Long> path1,
+			@PathVariable("path2") Optional<Long> path2, @AuthUser UserVo user) {
+
+		Long pno = 0L;
+		Long cno = 1L;
+		if (path2.isPresent()) {
+			pno = path2.get();
+			cno = path1.get();
+		} else if (path1.isPresent()) {
+			cno = path1.get();
+		}
 
 		BlogVo vo = blogService.blogById(id);
-		List<CategoryVo> list = categoryService.getList(vo.getNo());
 
-		CategoryVo cvo = (pno == 0) ? list.get(0) : categoryService.getCategory(pno);
+		List<CategoryVo> list = categoryService.getList(1L);
+		List<PostVo> posts = null;
 
-		List<PostVo> posts = postService.getList(cvo.getNo());
+		posts = postService.getList(cno);
+
+		CategoryVo category = categoryService.getCategory(cno);
+		PostVo post = null;
+		if (!posts.isEmpty()) {
+			post = (pno == 0) ? posts.get(0) : postService.getPost(pno);
+		}
+
+		// model.addAttribute("id",id);
 		model.addAttribute("blog", vo);
+		model.addAttribute("category", category);
 		model.addAttribute("categorys", list);
-		model.addAttribute("category", cvo);
+		model.addAttribute("post", post);
 		model.addAttribute("posts", posts);
 
 		return "blog/blog-main";
 	}
 
-	@RequestMapping(value = "/{id}/admin/basic", method = RequestMethod.GET)
-	public String blogBasic(@PathVariable("id") String id, Model model) {
+	@Auth(role = Role.ADMIN)
+	@RequestMapping(value = "/admin/basic", method = RequestMethod.GET)
+	public String blogBasic(@PathVariable("id") String id, Model model, @AuthUser UserVo user) {
 
 		BlogVo vo = blogService.blogById(id);
 
@@ -64,11 +88,11 @@ public class BlogController {
 		return "blog/blog-admin-basic";
 	}
 
-	@RequestMapping(value = "/{id}/admin/basic", method = RequestMethod.POST)
+	@Auth(role = Role.ADMIN)
+	@RequestMapping(value = "/admin/basic", method = RequestMethod.POST)
 	public String blogBasic(Model model, @RequestParam("title") String title,
-			@RequestParam("logo-file") MultipartFile multipartFile, 
-			@RequestParam("no") Long no,
-			@PathVariable("id") String id) {
+			@RequestParam("logo-file") MultipartFile multipartFile, @RequestParam("no") Long no,
+			@PathVariable("id") String id, @AuthUser UserVo user) {
 
 		String image = (multipartFile.isEmpty() == true) ? (blogService.blogById(id)).getImage()
 				: fileUploadService.restore(multipartFile);
@@ -84,11 +108,12 @@ public class BlogController {
 
 		model.addAttribute("blog", vo);
 
-		return "redirect:/blog/" + id;
+		return "redirect:/" + id;
 	}
 
-	@RequestMapping(value = "/{id}/admin/category", method = RequestMethod.GET)
-	public String blogCategory(@PathVariable("id") String id, Model model) {
+	@Auth(role = Role.ADMIN)
+	@RequestMapping(value = "/admin/category", method = RequestMethod.GET)
+	public String blogCategory(@PathVariable("id") String id, Model model, @AuthUser UserVo user) {
 
 		BlogVo vo = blogService.blogById(id);
 
@@ -100,8 +125,9 @@ public class BlogController {
 		return "blog/blog-admin-category";
 	}
 
-	@RequestMapping(value = "/{id}/admin/write", method = RequestMethod.GET)
-	public String blogWrite(Model model, @PathVariable("id") String id) {
+	@Auth(role = Role.ADMIN)
+	@RequestMapping(value = "/admin/write", method = RequestMethod.GET)
+	public String blogWrite(Model model, @PathVariable("id") String id, @AuthUser UserVo user) {
 
 		BlogVo vo = blogService.blogById(id);
 
@@ -113,14 +139,13 @@ public class BlogController {
 		return "blog/blog-admin-write";
 	}
 
-	@RequestMapping(value = "/{id}/admin/write", method = RequestMethod.POST)
-	public String blogWrite(@ModelAttribute PostVo vo, @PathVariable("id") String id) {
-
-		System.out.println(vo);
+	@Auth(role = Role.ADMIN)
+	@RequestMapping(value = "/admin/write", method = RequestMethod.POST)
+	public String blogWrite(@ModelAttribute PostVo vo, @PathVariable("id") String id, @AuthUser UserVo user) {
 
 		postService.postUpdate(vo);
 
-		return "redirect:/blog/" + id;
+		return "redirect:/" + id;
 	}
 
 }

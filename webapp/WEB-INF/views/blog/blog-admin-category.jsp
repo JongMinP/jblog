@@ -37,10 +37,12 @@ var removeCategory = function(no,bno) {
 
 var displayCategory = function(resultData) { //article이 json(자바스크립트객체)으로 온다. 
 	var categoryHtml = "";
+	var size = resultData.length;
 	categoryHtml += '<table class="admin-cat"> <tr> <th>번호</th> <th>카테고리명</th> <th>포스트 수</th> <th>설명</th> <th>삭제</th> </tr>' ;
 	
 	$.each(resultData, function(index, category){
-		categoryHtml += '<tr> <td>'+ category.no + '</td>' ;
+		index +=1
+		categoryHtml += '<tr> <td>'+ index   + '</td>' ;
 		categoryHtml += '<td>' + category.name + '</td>' ;
 		categoryHtml += '<td>' + category.postCount + '</td>' ;
 		categoryHtml += '<td>' + category.content + '</td>' ;
@@ -83,7 +85,7 @@ var errorCallback = function() {
 					
 					<c:forEach items="${categorys }" var="category" varStatus="status">
 					<tr>
-						<td>${categorys.size() - status.index }</td>
+						<td>${ status.count }</td>
 						<td>${category.name }</td>
 						<td>${category.postCount }</td>
 						<td>${category.content }</td>

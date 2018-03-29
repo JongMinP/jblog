@@ -1,10 +1,33 @@
 package com.cafe24.jblog.vo;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class UserVo {
 	private Long no;
+	
+	@NotEmpty
+	@Length(min=2,max =10)
 	private String id;
+	
+	@NotEmpty
 	private String name;
+	
+	@NotEmpty
+	@Pattern(regexp="^[0-9a-zA-Z]{4,12}$")
 	private String password;
+	
+	private String joinDate;
+
+	public String getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(String joinDate) {
+		this.joinDate = joinDate;
+	}
 
 	public Long getNo() {
 		return no;
@@ -40,7 +63,8 @@ public class UserVo {
 
 	@Override
 	public String toString() {
-		return "UserVo [no=" + no + ", id=" + id + ", name=" + name + ", password=" + password + "]";
+		return "UserVo [no=" + no + ", id=" + id + ", name=" + name + ", password=" + password + ", joinDate="
+				+ joinDate + "]";
 	}
 
 }

@@ -20,7 +20,7 @@
 				<c:import url="/WEB-INF/views/includes/blog-menu.jsp">
 					<c:param name="menu" value="basic" />
 				</c:import>
-				<form action="${ctx}/blog/${authUser.id}/admin/basic" method="post" enctype="multipart/form-data" >
+				<form action="${ctx}/${authUser.id}/admin/basic" method="post" enctype="multipart/form-data" >
 					<input type="hidden" name = "no" value="${authUser.no}">
 					<table class="admin-config">
 						<tr>

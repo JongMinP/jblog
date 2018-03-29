@@ -6,6 +6,15 @@ public class CategoryVo {
 	private Long postCount;
 	private String content;
 	private Long blogNo;
+	private String regDate;
+
+	public String getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
 
 	public Long getNo() {
 		return no;
@@ -50,7 +59,7 @@ public class CategoryVo {
 	@Override
 	public String toString() {
 		return "CategoryVo [no=" + no + ", name=" + name + ", postCount=" + postCount + ", content=" + content
-				+ ", blogNo=" + blogNo + "]";
+				+ ", blogNo=" + blogNo + ", regDate=" + regDate + "]";
 	}
 
 }

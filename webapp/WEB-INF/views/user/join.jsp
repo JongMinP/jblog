@@ -1,6 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<!-- 태그 라이브러리 추가 -->
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<!-- 폼 태그 라이브러리 추가  -->
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <!doctype html>
@@ -17,7 +22,7 @@
 	$(function() {
 
 		$("#btn-checkid").click(function() {
-			var id = $("#blog-id").val();
+			var id = $("#id").val();
 			if (id == "") {
 				return;
 			}
@@ -50,6 +55,12 @@
 			});
 
 		});
+		
+		
+		 $( "#id" ).change( function(){
+			    $("#img-checkid").hide();
+			    $("#btn-checkid").show();         
+		});
 
 	});
 </script>
@@ -64,16 +75,34 @@
 		<ul class="menu">
 			<c:import url="/WEB-INF/views/includes/header.jsp" />
 		</ul>
-		<form class="join-form" id="join-form" method="post"
+		<form:form modelAttribute="userVo" class="join-form" id="join-form" method="post"
 			action="${ctx}/user/join">
-			<label class="block-label" for="name">이름</label> <input id="name"
-				name="name" type="text" value=""> <label class="block-label"
-				for="blog-id">아이디</label> <input id="blog-id" name="id" type="text">
+			<label class="block-label" for="name">이름</label> 
+			<form:input path="name"/>
+			 <p style="padding:0; font-weight: bold; text-align: left; color:#f00;">
+				<form:errors path="name"/>
+			</p>
+			
+<!-- 		<input id="name" name="name" type="text" value="">  -->
+			
+			<label class="block-label"
+				for="id">아이디</label> 
+			<form:input path="id"/>
+			 <p style="padding:0; font-weight: bold; text-align: left; color:#f00;">
+				<form:errors path="id"/>
+			</p>
+<!-- 		<input id="id" name="id" type="text"> -->
+			
 			<input id="btn-checkid" type="button" value="id 중복체크"> <img
 				id="img-checkid" style="display: none;"
 				src="${ctx}/assets/images/check.png"> <label
-				class="block-label" for="password">패스워드</label> <input id="password"
-				name="password" type="password" />
+				class="block-label" for="password">패스워드</label> 
+				
+				<form:password path="password"/>
+				 <p style="padding:0; font-weight: bold; text-align: left; color:#f00;">
+					<form:errors path="password"/>
+				</p>
+<!-- 				<input id="password" name="password" type="password" /> -->
 
 			<fieldset>
 				<legend>약관동의</legend>
@@ -83,10 +112,8 @@
 
 			<input type="submit" value="가입하기">
 
-		</form>
+		</form:form>
 	</div>
-	<div id="dialog-message" title="" style="display: none">
-		<p></p>
-	</div>
+	
 </body>
 </html>
