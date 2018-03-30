@@ -20,11 +20,17 @@
 </select>
 
 
+
 <select id="getPost" parameterType="long" resultType="postvo">
 	<include refid="findPost"/>
 <![CDATA[
 	where no = #{parameter}
 	]]>
+</select>
+
+<select id="getPostPager">
+	<include refid="findPost"/>
+
 </select>
 
 <insert id="insertPost" parameterType="postvo">

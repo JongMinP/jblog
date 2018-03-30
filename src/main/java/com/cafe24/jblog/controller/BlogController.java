@@ -47,6 +47,7 @@ public class BlogController {
 
 		Long pno = 0L;
 		Long cno = 1L;
+		
 		if (path2.isPresent()) {
 			pno = path2.get();
 			cno = path1.get();
