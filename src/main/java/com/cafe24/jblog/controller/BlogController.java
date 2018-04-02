@@ -42,12 +42,13 @@ public class BlogController {
 	private PostService postService;
 
 	@RequestMapping({ "", "/{path1}", "/{path1}/{path2}" })
-	public String goBlog(@PathVariable("id") String id, Model model, @PathVariable("path1") Optional<Long> path1,
-			@PathVariable("path2") Optional<Long> path2, @AuthUser UserVo user) {
+	public String goBlog(@PathVariable("id") String id, Model model, 
+			@PathVariable("path1") Optional<Long> path1,
+			@PathVariable("path2") Optional<Long> path2) {
 
 		Long pno = 0L;
 		Long cno = 1L;
-		
+
 		if (path2.isPresent()) {
 			pno = path2.get();
 			cno = path1.get();
@@ -58,17 +59,14 @@ public class BlogController {
 		BlogVo vo = blogService.blogById(id);
 
 		List<CategoryVo> list = categoryService.getList(1L);
-		List<PostVo> posts = null;
-
-		posts = postService.getList(cno);
+		List<PostVo> posts = postService.getList(cno);
 
 		CategoryVo category = categoryService.getCategory(cno);
-		PostVo post = null;
-		if (!posts.isEmpty()) {
-			post = (pno == 0) ? posts.get(0) : postService.getPost(pno);
-		}
 
-		// model.addAttribute("id",id);
+		PostVo post = null;
+		if (!posts.isEmpty())
+			post = (pno == 0) ? posts.get(0) : postService.getPost(pno);
+
 		model.addAttribute("blog", vo);
 		model.addAttribute("category", category);
 		model.addAttribute("categorys", list);
@@ -80,7 +78,7 @@ public class BlogController {
 
 	@Auth(role = Role.ADMIN)
 	@RequestMapping(value = "/admin/basic", method = RequestMethod.GET)
-	public String blogBasic(@PathVariable("id") String id, Model model, @AuthUser UserVo user) {
+	public String blogBasic(@PathVariable("id") String id, Model model) {
 
 		BlogVo vo = blogService.blogById(id);
 
@@ -91,30 +89,26 @@ public class BlogController {
 
 	@Auth(role = Role.ADMIN)
 	@RequestMapping(value = "/admin/basic", method = RequestMethod.POST)
-	public String blogBasic(Model model, @RequestParam("title") String title,
-			@RequestParam("logo-file") MultipartFile multipartFile, @RequestParam("no") Long no,
-			@PathVariable("id") String id, @AuthUser UserVo user) {
+	public String blogBasic(Model model, 
+			@RequestParam("logo-file") MultipartFile multipartFile, 
+			@ModelAttribute BlogVo blogVo,
+			@PathVariable("id") String id) {
 
 		String image = (multipartFile.isEmpty() == true) ? (blogService.blogById(id)).getImage()
 				: fileUploadService.restore(multipartFile);
 
-		BlogVo vo = new BlogVo();
+		blogVo.setImage(image);
 
-		vo.setUserNo(no);
-		vo.setTitle(title);
+		blogService.blogUpdate(blogVo);
 
-		vo.setImage(image);
-
-		blogService.blogUpdate(vo);
-
-		model.addAttribute("blog", vo);
+		model.addAttribute("blog", blogVo);
 
 		return "redirect:/" + id;
 	}
 
 	@Auth(role = Role.ADMIN)
 	@RequestMapping(value = "/admin/category", method = RequestMethod.GET)
-	public String blogCategory(@PathVariable("id") String id, Model model, @AuthUser UserVo user) {
+	public String blogCategory(@PathVariable("id") String id, Model model) {
 
 		BlogVo vo = blogService.blogById(id);
 
@@ -128,7 +122,7 @@ public class BlogController {
 
 	@Auth(role = Role.ADMIN)
 	@RequestMapping(value = "/admin/write", method = RequestMethod.GET)
-	public String blogWrite(Model model, @PathVariable("id") String id, @AuthUser UserVo user) {
+	public String blogWrite(Model model, @PathVariable("id") String id) {
 
 		BlogVo vo = blogService.blogById(id);
 
@@ -142,7 +136,7 @@ public class BlogController {
 
 	@Auth(role = Role.ADMIN)
 	@RequestMapping(value = "/admin/write", method = RequestMethod.POST)
-	public String blogWrite(@ModelAttribute PostVo vo, @PathVariable("id") String id, @AuthUser UserVo user) {
+	public String blogWrite(@ModelAttribute PostVo vo, @PathVariable("id") String id) {
 
 		postService.postUpdate(vo);
 
