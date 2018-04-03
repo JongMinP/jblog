@@ -1,5 +1,6 @@
 package com.cafe24.security;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,10 +33,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		// 3. @Auth 받아오기
 		Auth auth = handlerMethod.getMethodAnnotation(Auth.class);
 
+		// 클래스 에서 @Auth 받아오기
+		Auth classAuth = handlerMethod.getMethod().getDeclaringClass().getAnnotation(Auth.class);
+
 		System.out.println(auth);
 
+		System.out.println(classAuth);
+
 		// 4. Method에 @Auth가 없는 경우
-		if (auth == null) {
+		if (auth == null && classAuth == null) {
 			return true; // 뒤로
 		}
 
@@ -53,13 +59,19 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			response.sendRedirect(request.getContextPath() + "/user/login");
 			return false;
 		}
-		Auth.Role role = auth.role();
 
-		if (role == Auth.Role.ADMIN) {
-			Map pathVariables = (LinkedHashMap) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		// 없는 경우 뒤로
+		if (classAuth == null) {
+			return true;
+		}
 
-			if (!authUser.getId().equals(pathVariables.get("id"))) { // 번호가 다르면
-				response.sendRedirect(request.getContextPath());
+		if (classAuth.role() == Auth.Role.ADMIN) {
+			Map<?, ?> pathVariables = (HashMap<?, ?>) request
+					.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+			String blogId = (String) pathVariables.get("id");
+
+			if (!authUser.getId().equals(blogId)) { // 번호가 다르면
+				response.sendRedirect(request.getContextPath() + "/" + blogId);
 				return false;
 			}
 		}

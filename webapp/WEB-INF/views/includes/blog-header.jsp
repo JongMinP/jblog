@@ -9,7 +9,7 @@
 <Link rel="stylesheet" href="${ctx}/assets/css/jblog.css">
 
 <div id="header">
-	<h1><a href="${ctx}/${authUser.id}">${blog.title}</a></h1>
+	<h1><a href="${ctx}/${id}">${blog.title}</a></h1>
 	<ul>
 			<c:if test="${authUser == null }">
 				<li><a href="${ctx}/user/login">로그인</a></li>

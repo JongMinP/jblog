@@ -26,14 +26,11 @@ import com.cafe24.security.Auth.Role;
 import com.cafe24.security.AuthUser;
 
 @Controller
-@RequestMapping("/{id:(?!assets|uploads|admin).*}")
+@RequestMapping("/{id:(?!assets|uploads).*}")
 public class BlogController {
 
 	@Autowired
 	private BlogService blogService;
-
-	@Autowired
-	private FileUploadService fileUploadService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -42,8 +39,7 @@ public class BlogController {
 	private PostService postService;
 
 	@RequestMapping({ "", "/{path1}", "/{path1}/{path2}" })
-	public String goBlog(@PathVariable("id") String id, Model model, 
-			@PathVariable("path1") Optional<Long> path1,
+	public String goBlog(@PathVariable("id") String id, Model model, @PathVariable("path1") Optional<Long> path1,
 			@PathVariable("path2") Optional<Long> path2) {
 
 		Long pno = 0L;
@@ -74,73 +70,6 @@ public class BlogController {
 		model.addAttribute("posts", posts);
 
 		return "blog/blog-main";
-	}
-
-	@Auth(role = Role.ADMIN)
-	@RequestMapping(value = "/admin/basic", method = RequestMethod.GET)
-	public String blogBasic(@PathVariable("id") String id, Model model) {
-
-		BlogVo vo = blogService.blogById(id);
-
-		model.addAttribute("blog", vo);
-
-		return "blog/blog-admin-basic";
-	}
-
-	@Auth(role = Role.ADMIN)
-	@RequestMapping(value = "/admin/basic", method = RequestMethod.POST)
-	public String blogBasic(Model model, 
-			@RequestParam("logo-file") MultipartFile multipartFile, 
-			@ModelAttribute BlogVo blogVo,
-			@PathVariable("id") String id) {
-
-		String image = (multipartFile.isEmpty() == true) ? (blogService.blogById(id)).getImage()
-				: fileUploadService.restore(multipartFile);
-
-		blogVo.setImage(image);
-
-		blogService.blogUpdate(blogVo);
-
-		model.addAttribute("blog", blogVo);
-
-		return "redirect:/" + id;
-	}
-
-	@Auth(role = Role.ADMIN)
-	@RequestMapping(value = "/admin/category", method = RequestMethod.GET)
-	public String blogCategory(@PathVariable("id") String id, Model model) {
-
-		BlogVo vo = blogService.blogById(id);
-
-		List<CategoryVo> list = categoryService.getList(vo.getNo());
-
-		model.addAttribute("categorys", list);
-		model.addAttribute("blog", vo);
-
-		return "blog/blog-admin-category";
-	}
-
-	@Auth(role = Role.ADMIN)
-	@RequestMapping(value = "/admin/write", method = RequestMethod.GET)
-	public String blogWrite(Model model, @PathVariable("id") String id) {
-
-		BlogVo vo = blogService.blogById(id);
-
-		List<CategoryVo> list = categoryService.getList(vo.getNo());
-
-		model.addAttribute("blog", vo);
-		model.addAttribute("categorys", list);
-
-		return "blog/blog-admin-write";
-	}
-
-	@Auth(role = Role.ADMIN)
-	@RequestMapping(value = "/admin/write", method = RequestMethod.POST)
-	public String blogWrite(@ModelAttribute PostVo vo, @PathVariable("id") String id) {
-
-		postService.postUpdate(vo);
-
-		return "redirect:/" + id;
 	}
 
 }

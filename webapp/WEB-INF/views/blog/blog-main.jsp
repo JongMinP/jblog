@@ -28,7 +28,7 @@
 				<ul class="blog-list">
 
 					<c:forEach items="${posts }" var="post">
-						<li><a href="${ctx}/${authUser.id}/${category.no}/${post.no}">${post.title }</a><span>${post.regDate }</span></li>
+						<li><a href="${ctx}/${id}/${category.no}/${post.no}">${post.title }</a><span>${post.regDate }</span></li>
 					</c:forEach>
 				</ul>
 				
@@ -46,7 +46,7 @@
 			<h2>카테고리</h2>
 			<ul>
 				<c:forEach items="${categorys }" var="category">
-					<li><a href="${ctx}/${authUser.id}/${category.no}">${category.name }</a></li>
+					<li><a href="${ctx}/${id}/${category.no}">${category.name }</a></li>
 				</c:forEach>
 			</ul>
 		</div>
